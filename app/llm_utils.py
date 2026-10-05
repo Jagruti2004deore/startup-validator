@@ -1,3 +1,6 @@
+from langchain_groq import ChatGroq
+from app.config import GROQ_API_KEY, MODEL_NAME
+
 import json
 import re
 import time
@@ -45,3 +48,13 @@ def ask_structured(llm, prompt: str, model: type[BaseModel], tries: int = 3):
         except Exception as e:
             last_error = e  # bad JSON, so ask again
     raise ValueError(f"LLM did not return valid JSON after {tries} tries: {last_error}")
+
+_llm = None
+
+
+def get_llm():
+    """One shared LLM object. max_retries=0 because we handle rate limits ourselves."""
+    global _llm
+    if _llm is None:
+        _llm = ChatGroq(model=MODEL_NAME, api_key=GROQ_API_KEY, max_retries=0)
+    return _llm
