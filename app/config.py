@@ -11,6 +11,8 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")      # optional, only if we pick Op
 MODEL_NAME = "openai/gpt-oss-120b"
 PINECONE_INDEX_NAME = "startup-validator"
 
+DB_PATH = "validator.db"
+
 # agent limits (we tune these later)
 MAX_LOOPS = 2               # how many times the Critic can send work back
 NUM_QUERIES = 3             # search queries per round
