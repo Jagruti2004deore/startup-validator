@@ -12,6 +12,11 @@ MODEL_NAME = "openai/gpt-oss-120b"
 PINECONE_INDEX_NAME = "startup-validator"
 
 DB_PATH = "validator.db"
+PINECONE_NAMESPACE = "founder"          # separates real memory from test data
+PINECONE_CLOUD = "aws"
+PINECONE_REGION = "us-east-1"           # the free plan supports this region
+EMBED_MODEL = "llama-text-embed-v2"
+EMBED_DIM = 1024
 
 # agent limits (we tune these later)
 MAX_LOOPS = 2               # how many times the Critic can send work back
