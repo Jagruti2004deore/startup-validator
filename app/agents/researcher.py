@@ -1,3 +1,5 @@
+import re
+import time
 from urllib.parse import urlparse
 
 from tavily import TavilyClient
@@ -35,6 +37,11 @@ def _norm_url(url: str) -> str:
     return url.split("#")[0].rstrip("/").lower()
 
 
+def _qkey(query: str) -> str:
+    """A query reduced to letters and digits, so small wording noise does not hide a repeat."""
+    return re.sub(r"[^a-z0-9]", "", query.lower())
+
+
 def _angles_for(state: ValidatorState) -> list:
     """First round: every angle. Later rounds: only the gaps the Critic found."""
     gaps = [g for g in state.get("gaps", []) if g in ANGLES]
@@ -43,12 +50,40 @@ def _angles_for(state: ValidatorState) -> list:
     return list(ANGLES)
 
 
+def _previous_queries(state: ValidatorState) -> list:
+    """Every query used so far: this run's last queries plus the ones stored on sources."""
+    seen, result = set(), []
+    candidates = list(state["queries"]) + [s.get("query") for s in state["sources"]]
+    for q in candidates:
+        if q and _qkey(q) not in seen:
+            seen.add(_qkey(q))
+            result.append(q)
+    return result
+
+
+def _search_with_retry(query: str):
+    """One search, retried twice on network errors."""
+    last_error = None
+    for attempt in range(3):
+        try:
+            return _tavily.search(
+                query,
+                max_results=RESULTS_PER_QUERY,
+                exclude_domains=EXCLUDE_DOMAINS,
+            )
+        except Exception as e:
+            last_error = e
+            time.sleep(2 * (attempt + 1))
+    raise last_error
+
+
 # ---------- Node: plan the searches ----------
 def plan_research(state: ValidatorState) -> dict:
     angles = _angles_for(state)
     p = state["profile"]
     angle_lines = "\n".join(f"{i}. {ANGLES[a]}" for i, a in enumerate(angles, start=1))
-    old = "\n".join(f"- {q}" for q in state["queries"]) or "none"
+    previous = _previous_queries(state)
+    old = "\n".join(f"- {q}" for q in previous) or "none"
 
     prompt = today_note() + PLAN_RESEARCH_PROMPT.format(
         name=p["name"], problem=p["problem"], solution=p["solution"],
@@ -61,11 +96,21 @@ def plan_research(state: ValidatorState) -> dict:
     if not queries:
         queries = [f"{p['name']} competitors"]  # fallback so the run never stalls
 
+    # Never repeat an earlier search. Swap in a plain fallback query instead.
+    used = {_qkey(q) for q in previous}
+    geography = "" if p["geography"].strip().lower() == "not specified" else p["geography"]
+    fresh = []
+    for i, q in enumerate(queries):
+        if _qkey(q) in used or _qkey(q) in {_qkey(x) for x in fresh}:
+            angle = angles[min(i, len(angles) - 1)]
+            q = clean_text(f"{p['category']} {geography} {ANGLES[angle]}").strip()
+        fresh.append(q)
+
     db.add_event(
         state["run_id"], "researcher",
-        f"Planned {len(queries)} search(es) for: {', '.join(angles)}",
+        f"Planned {len(fresh)} search(es) for: {', '.join(angles)}",
     )
-    return {"queries": queries}
+    return {"queries": fresh}
 
 
 # ---------- Node: search the web ----------
@@ -82,11 +127,7 @@ def search_web(state: ValidatorState) -> dict:
         if len(sources) >= MAX_SOURCES_TOTAL:
             break
         try:
-            response = _tavily.search(
-                query,
-                max_results=RESULTS_PER_QUERY,
-                exclude_domains=EXCLUDE_DOMAINS,
-            )
+            response = _search_with_retry(query)
         except Exception as e:
             print(f"  (search failed for '{query}': {e})")
             db.add_event(state["run_id"], "researcher", f"A search failed: {query}")

@@ -26,7 +26,7 @@ RESULTS_PER_QUERY = 3       # web results per query
 MAX_CHARS_PER_SOURCE = 500  # keeps prompts small, avoids rate limits
 MAX_SOURCES_TOTAL = 30      # stop collecting after this many sources
 MAX_PER_DOMAIN = 2          # no single website can dominate
-GAP_ROUND_MAX_QUERIES = 3   # queries in a re-research round
+GAP_ROUND_MAX_QUERIES = 4   # queries in a re-research round
 MIN_MEMORY_SCORE = 0.3      # ignore past notes less similar than this (tune from Phase 3 scores)
 
 # sites we never want as sources

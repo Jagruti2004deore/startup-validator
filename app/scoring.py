@@ -15,7 +15,7 @@ VERDICT_CAUTION = "Proceed with caution"
 # (key, label, claim category). The number needed comes from MIN_VERIFIED in config.
 EVIDENCE_ITEMS = [
     ("competitors", "Distinct direct competitors", "competitor"),
-    ("pricing", "Pricing found for competitors", "pricing"),
+    ("pricing", "Pricing found for verified competitors", "pricing"),
     ("demand", "Evidence of customer pain or demand", "demand_signal"),
     ("market_size", "Market size or growth figure", "market_size"),
     ("recent_activity", "Recent activity in the space", "recent_activity"),
@@ -25,6 +25,10 @@ TOTAL_ITEMS = len(EVIDENCE_ITEMS) + 2  # plus the differentiation gap and the me
 
 # The company name at the start of a claim, for example "Kahoot+ Study"
 LEAD_NAME_RE = re.compile(r"^((?:[A-Z][\w+&'\-]*\s?){1,3})")
+
+
+def _tokens(text: str) -> list:
+    return re.findall(r"[a-z0-9]+", (text or "").lower())
 
 
 def competitor_key(text: str) -> str:
@@ -42,6 +46,24 @@ def count_competitors(verified: list) -> int:
         competitor_key(c.get("text", ""))
         for c in verified if c.get("category") == "competitor"
     })
+
+
+def matched_pricing(verified: list) -> list:
+    """Pricing claims that name a verified competitor. Other pricing claims do not count."""
+    keys = []
+    for c in verified:
+        if c.get("category") == "competitor":
+            tokens = _tokens(competitor_key(c.get("text", "")))[:2]
+            if tokens:
+                keys.append(tokens)
+    result = []
+    for c in verified:
+        if c.get("category") != "pricing":
+            continue
+        words = set(_tokens(c.get("text", "")))
+        if any(all(tok in words for tok in key) for key in keys):
+            result.append(c)
+    return result
 
 
 def crowdedness(n_competitors: int) -> str:
@@ -84,6 +106,7 @@ def build_score(verified: list, memory_checked: bool) -> dict:
     counts = Counter(c.get("category") for c in verified)
     n_comp = count_competitors(verified)
     counts["competitor"] = n_comp
+    counts["pricing"] = len(matched_pricing(verified))  # only prices of verified competitors
 
     items = []
     for key, label, category in EVIDENCE_ITEMS:
@@ -147,8 +170,22 @@ def format_score(score: dict) -> str:
 
 
 def score_node(state: ValidatorState) -> dict:
-    """The graph node: score the verified claims and save the verdict."""
-    score = build_score(state["verified"], state.get("memory_checked", False))
+    """The graph node: drop pricing for non-competitors, score the rest, save the verdict."""
+    verified = state["verified"]
+    keep_ids = {id(c) for c in matched_pricing(verified)}
+    unmatched_ids = {
+        id(c) for c in verified
+        if c.get("category") == "pricing" and id(c) not in keep_ids
+    }
+    usable = [c for c in verified if id(c) not in unmatched_ids]
+    moved = [
+        dict(c, reason="pricing_for_unverified_competitor")
+        for c in verified if id(c) in unmatched_ids
+    ]
+    dropped = list(state["dropped"]) + moved
+
+    score = build_score(usable, state.get("memory_checked", False))
+    db.save_claims(state["run_id"], usable, dropped)
     db.update_run(
         state["run_id"],
         verdict=score["verdict"],
@@ -158,4 +195,4 @@ def score_node(state: ValidatorState) -> dict:
         state["run_id"], "scoring",
         f"Evidence score {score['evidence_score']}/{score['max_score']}. Verdict: {score['verdict']}",
     )
-    return {"score": score, "verdict": score["verdict"]}
+    return {"score": score, "verdict": score["verdict"], "verified": usable, "dropped": dropped}

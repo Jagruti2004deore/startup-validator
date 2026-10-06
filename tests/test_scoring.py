@@ -1,5 +1,5 @@
 from app.scoring import (
-    build_score, competitor_key, count_competitors, crowdedness,
+    build_score, competitor_key, count_competitors, crowdedness, matched_pricing,
     VERDICT_UNCLEAR, VERDICT_RISKY, VERDICT_PROMISING, VERDICT_CAUTION,
 )
 
@@ -14,10 +14,15 @@ def claim(category, text=None):
     return {"category": category, "text": text or f"{category} fact"}
 
 
+def prices():
+    """Two pricing claims that name competitors Alpha and Beta."""
+    return [claim("pricing", "Alpha charges $5 a month"), claim("pricing", "Beta charges $7 a month")]
+
+
 def full_set(n_comps=4, gap=True):
-    verified = comps(n_comps) + [
-        claim("pricing"), claim("pricing"), claim("demand_signal"),
-        claim("market_size"), claim("recent_activity"), claim("failure_or_risk"),
+    verified = comps(n_comps) + prices() + [
+        claim("demand_signal"), claim("market_size"),
+        claim("recent_activity"), claim("failure_or_risk"),
     ]
     if gap:
         verified.append(claim("differentiation_gap"))
@@ -37,7 +42,7 @@ def test_too_little_evidence_is_unclear():
 
 
 def test_crowded_market_without_gap_is_risky():
-    verified = comps(8) + [claim("pricing"), claim("pricing"), claim("demand_signal"), claim("market_size")]
+    verified = comps(8) + prices() + [claim("demand_signal"), claim("market_size")]
     score = build_score(verified, memory_checked=True)
     assert score["crowdedness"] == "high"
     assert score["verdict"] == VERDICT_RISKY
@@ -86,3 +91,16 @@ def test_gap_only_counts_when_verified():
 def test_reasons_are_readable_text():
     score = build_score(full_set(), memory_checked=True)
     assert score["reasons"] and all(isinstance(r, str) and r for r in score["reasons"])
+
+
+def test_pricing_for_unknown_company_does_not_count():
+    verified = comps(4) + [claim("pricing", "Zoom charges $13 a month"), claim("pricing", "ChatGPT Go is free")]
+    score = build_score(verified, memory_checked=True)
+    pricing_item = next(i for i in score["items"] if i["key"] == "pricing")
+    assert pricing_item["found"] == 0
+    assert pricing_item["passed"] is False
+
+
+def test_matched_pricing_keeps_only_known_competitors():
+    verified = comps(2) + [claim("pricing", "Alpha charges $5"), claim("pricing", "Zoom charges $9")]
+    assert [c["text"] for c in matched_pricing(verified)] == ["Alpha charges $5"]

@@ -54,8 +54,8 @@ def test_gaps_are_listed():
         for name in ("Alpha", "Beta", "Gamma")
     ]
     verified = competitors + [
-        {"category": "pricing", "text": "p1"},
-        {"category": "pricing", "text": "p2"},
+        {"category": "pricing", "text": "Alpha charges $5 a month"},
+        {"category": "pricing", "text": "Beta charges $7 a month"},
         {"category": "market_size", "text": "m"},
         {"category": "demand_signal", "text": "d"},
     ]
@@ -65,6 +65,13 @@ def test_gaps_are_listed():
     # the same company three times is still one competitor
     same_company = [{"category": "competitor", "text": f"Alpha fact {i}"} for i in range(3)]
     assert "competitor" in compute_gaps(same_company)
+
+    # pricing for a company that is not a verified competitor does not count
+    unmatched = competitors + [
+        {"category": "pricing", "text": "Zoom charges $9 a month"},
+        {"category": "pricing", "text": "Skype is free"},
+    ]
+    assert "pricing" in compute_gaps(unmatched)
 
 def test_names_ignore_spacing_and_punctuation():
     assert names_missing("MoocLab lists Middle-High groups", "Mooclab: Middle/High school groups") == []
