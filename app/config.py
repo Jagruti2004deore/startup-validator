@@ -23,10 +23,13 @@ MAX_LOOPS = 2               # how many times the Critic can send work back
 NUM_QUERIES = 3             # search queries per round
 RESULTS_PER_QUERY = 3       # web results per query
 MAX_CHARS_PER_SOURCE = 500  # keeps prompts small, avoids rate limits
-MAX_SOURCES_TOTAL = 24      # stop collecting after this many sources
+MAX_SOURCES_TOTAL = 30      # stop collecting after this many sources
 MAX_PER_DOMAIN = 2          # no single website can dominate
 GAP_ROUND_MAX_QUERIES = 3   # queries in a re-research round
 MIN_MEMORY_SCORE = 0.3      # ignore past notes less similar than this (tune it below)
+
+ANALYST_BATCH_SIZE = 10     # sources read per LLM call
+MAX_CLAIMS_PER_BATCH = 8
 
 # sites we never want as sources
 EXCLUDE_DOMAINS = ["youtube.com", "facebook.com", "instagram.com",

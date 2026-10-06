@@ -46,3 +46,14 @@ class ClaimCheck(BaseModel):
     evidence_quote: str = Field(
         description="Exact words copied from the source that support the claim, or an empty string"
     )
+
+
+class NoteConflict(BaseModel):
+    """How a past founder note relates to the new idea."""
+    relevant: bool = Field(description="True only if a past note directly relates to this idea")
+    claim_text: str = Field(
+        description="One sentence on how the note relates (agrees, conflicts, or repeats a past rejection). Empty if not relevant"
+    )
+    note_quote: str = Field(
+        description="Exact words copied from the past note that support the sentence. Empty if not relevant"
+    )

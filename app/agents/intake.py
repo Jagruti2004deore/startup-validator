@@ -14,11 +14,19 @@ def intake_node(state: ValidatorState) -> dict:
         raise ValueError("Please describe the idea in at least one full sentence.")
 
     profile = ask_structured(get_llm(), INTAKE_PROMPT.format(idea_text=idea), IdeaProfile)
+    data = profile.model_dump()
+
+    # safety net: the rest of the pipeline needs a name and a category
+    if not data["name"].strip() or data["name"].strip().lower() == "not specified":
+        data["name"] = " ".join(idea.split()[:4])
+    if not data["category"].strip() or data["category"].strip().lower() == "not specified":
+        data["category"] = "general"
+
     db.add_event(
         state["run_id"], "intake",
-        f"Understood the idea: {profile.name} ({profile.category}, {profile.geography})",
+        f"Understood the idea: {data['name']} ({data['category']}, {data['geography']})",
     )
-    return {"profile": profile.model_dump()}
+    return {"profile": data}
 
 
 def recall_node(state: ValidatorState) -> dict:

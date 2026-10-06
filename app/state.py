@@ -28,6 +28,7 @@ def initial_state(run_id: str, idea_text: str) -> ValidatorState:
         "past_notes": [],
         "queries": [],
         "sources": [],
+        "analyzed_count": 0,
         "claims": [],
         "verified": [],
         "dropped": [],
