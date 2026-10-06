@@ -40,7 +40,7 @@ def recall_node(state: ValidatorState) -> dict:
         # memory is a bonus; the run must continue without it
         db.add_event(state["run_id"], "recall", "Memory unavailable, continuing without it")
         print(f"  (memory search failed: {e})")
-        return {"past_notes": []}
+        return {"past_notes": [], "memory_checked": False}
 
     notes = [f"[{h['type']}] {h['text']}" for h in hits]
     message = (
@@ -48,4 +48,4 @@ def recall_node(state: ValidatorState) -> dict:
         else "No similar past notes found"
     )
     db.add_event(state["run_id"], "recall", message)
-    return {"past_notes": notes}
+    return {"past_notes": notes, "memory_checked": True}

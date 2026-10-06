@@ -1,3 +1,4 @@
+from app.scoring import count_competitors
 import re
 from collections import Counter
 
@@ -128,8 +129,8 @@ def quote_in_source(quote: str, haystack: str) -> bool:
 def compute_gaps(verified: list) -> list:
     """Research angles that still lack enough verified claims."""
     counts = Counter(c["category"] for c in verified)
+    counts["competitor"] = count_competitors(verified)  # distinct companies, not claims
     return [angle for angle, need in MIN_VERIFIED.items() if counts.get(angle, 0) < need]
-
 
 # ---------------------------------------------------------------------------
 # Checking one claim

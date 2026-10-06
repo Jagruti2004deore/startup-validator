@@ -7,8 +7,10 @@ class ValidatorState(TypedDict):
     idea_text: str
     profile: Dict[str, Any]       # the structured idea
     past_notes: List[str]         # similar notes from Pinecone
+    memory_checked: bool          # True once the memory search ran without an error
     queries: List[str]            # search queries for this round
     sources: List[Dict]           # {url, title, content}; the source number = position + 1
+    analyzed_count: int           # how many sources the Analyst has already read
     claims: List[Dict]            # every claim made by the Analyst
     verified: List[Dict]          # claims that passed the Critic
     dropped: List[Dict]           # claims that failed, with a reason
@@ -26,6 +28,7 @@ def initial_state(run_id: str, idea_text: str) -> ValidatorState:
         "idea_text": idea_text,
         "profile": {},
         "past_notes": [],
+        "memory_checked": False,
         "queries": [],
         "sources": [],
         "analyzed_count": 0,

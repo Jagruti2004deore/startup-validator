@@ -49,15 +49,22 @@ def test_quote_must_be_real():
 
 
 def test_gaps_are_listed():
-    verified = (
-        [{"category": "competitor"}] * 3
-        + [{"category": "pricing"}] * 2
-        + [{"category": "market_size"}, {"category": "demand_signal"}]
-    )
+    competitors = [
+        {"category": "competitor", "text": f"{name} offers a tool"}
+        for name in ("Alpha", "Beta", "Gamma")
+    ]
+    verified = competitors + [
+        {"category": "pricing", "text": "p1"},
+        {"category": "pricing", "text": "p2"},
+        {"category": "market_size", "text": "m"},
+        {"category": "demand_signal", "text": "d"},
+    ]
     assert compute_gaps(verified) == ["recent_activity", "failure_or_risk"]
-    assert "competitor" in compute_gaps([{"category": "competitor"}])
+    assert "competitor" in compute_gaps([{"category": "competitor", "text": "Alpha offers a tool"}])
 
-
+    # the same company three times is still one competitor
+    same_company = [{"category": "competitor", "text": f"Alpha fact {i}"} for i in range(3)]
+    assert "competitor" in compute_gaps(same_company)
 
 def test_names_ignore_spacing_and_punctuation():
     assert names_missing("MoocLab lists Middle-High groups", "Mooclab: Middle/High school groups") == []

@@ -122,7 +122,7 @@
   ],
   "claims": [
     {
-      "text": "Study Timer (groupstudytimer.com) offers a built-in task manager and tracks subject-wise study time for JEE, NEET and UPSC aspirants.",
+      "text": "Study Timer offers a built-in task manager and group features for JEE, NEET and UPSC aspirants.",
       "category": "competitor",
       "source_ids": [
         1
@@ -130,7 +130,7 @@
       "from_notes": false
     },
     {
-      "text": "Kahoot Study lets users create visual quizzes with images, GIFs and videos and add game experiences for group studying.",
+      "text": "Kahoot Study provides visual, competitive and discussion tools for group studying.",
       "category": "competitor",
       "source_ids": [
         2
@@ -138,15 +138,23 @@
       "from_notes": false
     },
     {
-      "text": "Y P T Study Group app sells cute cartoon packs for $3.",
-      "category": "pricing",
+      "text": "MoocLab hosts online study groups across categories such as General, Topic-Based, Course-Based, Middle-High School and Girls Only.",
+      "category": "competitor",
+      "source_ids": [
+        3
+      ],
+      "from_notes": false
+    },
+    {
+      "text": "YPT Study Group App is used by both high school and university students in India and other regions.",
+      "category": "competitor",
       "source_ids": [
         4
       ],
       "from_notes": false
     },
     {
-      "text": "The India edtech market size increased from USD 3.63 Billion in 2025 to USD 4.60 Billion in 2026.",
+      "text": "The India edtech market size increased from USD 3.63 Billion in 2025 to USD 4.60 Billion in 2026 and is projected to reach USD 33.31 Billion by 2034, growing at a CAGR of 27.94% from 2026-2034.",
       "category": "market_size",
       "source_ids": [
         7
@@ -154,15 +162,7 @@
       "from_notes": false
     },
     {
-      "text": "The India edtech market is projected to reach USD 33.31 Billion by 2034, growing at a compound annual growth rate of 27.94% from 2026-2034.",
-      "category": "market_size",
-      "source_ids": [
-        7
-      ],
-      "from_notes": false
-    },
-    {
-      "text": "India’s EdTech market is currently valued at around $7.5 billion and is projected to reach nearly $29-$30 billion by 2030-31.",
+      "text": "India’s edtech market is valued at around $7.5 billion in 2026 and is projected to reach $29-$30 billion by 2030-31.",
       "category": "market_size",
       "source_ids": [
         8
@@ -170,23 +170,23 @@
       "from_notes": false
     },
     {
-      "text": "An online study room app reports 1 million members from 215+ countries and provides group study rooms for high school and college students.",
-      "category": "demand_signal",
-      "source_ids": [
-        6
-      ],
-      "from_notes": false
-    },
-    {
-      "text": "Nearly 70–80% of Indian schools and colleges are still not fully digitized.",
-      "category": "demand_signal",
+      "text": "India’s edtech market was $2.8 billion in 2024 and is projected to exceed $33 billion by the next decade, with nearly 70-80% of Indian schools and colleges still not fully digitized.",
+      "category": "market_size",
       "source_ids": [
         9
       ],
       "from_notes": false
     },
     {
-      "text": "Depression (59.9%), loss of behavioral/emotional control (65.1%), and distress (70.3%) were reported among Indian college students.",
+      "text": "The GMAC 2026 Prospective Students Survey shows candidates in India overwhelmingly prefer full-time, in-person classroom learning.",
+      "category": "demand_signal",
+      "source_ids": [
+        10
+      ],
+      "from_notes": false
+    },
+    {
+      "text": "59.9% of Indian college students reported depression",
       "category": "demand_signal",
       "source_ids": [
         12
@@ -194,7 +194,7 @@
       "from_notes": false
     },
     {
-      "text": "Signs such as difficulty concentrating, declining grades, frequent absences, withdrawal from activities and socialization, and problems maintaining relationships were noted on Indian campuses.",
+      "text": "70.3% of Indian college students reported distress",
       "category": "demand_signal",
       "source_ids": [
         12
@@ -202,7 +202,7 @@
       "from_notes": false
     },
     {
-      "text": "10 Minute School, founded in 2013 in Dhaka, Bangladesh, is a web-based educational platform providing video content and online tests and has raised $9.26M from Sequoia Capital, Conjunction Capital and others.",
+      "text": "10 Minute School, founded 2013 in Dhaka, Bangladesh, is a web based educational platform providing video content and online tests",
       "category": "competitor",
       "source_ids": [
         13
@@ -210,7 +210,7 @@
       "from_notes": false
     },
     {
-      "text": "Chitti, founded in 2018 in Chennai, India, is an unfunded provider of a learning app for K-12 students.",
+      "text": "Chitti, founded 2018 in Chennai, India, is a provider of a learning app for K-12 students",
       "category": "competitor",
       "source_ids": [
         13
@@ -218,7 +218,7 @@
       "from_notes": false
     },
     {
-      "text": "Premia raised approximately $1.0M in a first institutional round for learning management and assessment on August 18, 2026.",
+      "text": "Premia received approximately $1.0M in a first institutional round for learning management and assessment on August 18, 2026",
       "category": "recent_activity",
       "source_ids": [
         14
@@ -226,7 +226,7 @@
       "from_notes": false
     },
     {
-      "text": "Codio secured $5.0M strategic growth financing for higher education and AI literacy on August 18, 2026.",
+      "text": "Codio received $5.0M in strategic growth financing for higher education and AI literacy on August 18, 2026",
       "category": "recent_activity",
       "source_ids": [
         14
@@ -234,7 +234,15 @@
       "from_notes": false
     },
     {
-      "text": "Studyond obtained about $2.5M in its first funding round for higher education and employability on August 17, 2026.",
+      "text": "Studyond received approximately $2.5M in a first funding round for higher education and employability on August 17, 2026",
+      "category": "recent_activity",
+      "source_ids": [
+        14
+      ],
+      "from_notes": false
+    },
+    {
+      "text": "Wild Zebra received $6.0M seed funding for K-12 AI tutoring on August 6, 2026",
       "category": "recent_activity",
       "source_ids": [
         14
