@@ -37,3 +37,14 @@ EXCLUDE_DOMAINS = ["youtube.com", "facebook.com", "instagram.com",
 
 if not GROQ_API_KEY or not TAVILY_API_KEY:
     raise ValueError("Missing GROQ_API_KEY or TAVILY_API_KEY. Check your .env file.")
+
+# how many verified claims each angle needs before it counts as covered
+MIN_VERIFIED = {
+    "competitor": 3,
+    "pricing": 2,
+    "market_size": 1,
+    "demand_signal": 1,
+    "recent_activity": 1,
+    "failure_or_risk": 1,
+}
+MAX_SOURCES_PER_CLAIM = 3

@@ -13,6 +13,17 @@ ClaimCategory = Literal[
     "conflict_with_past_notes",
 ]
 
+# What the Critic may relabel a claim as (or "irrelevant" to drop it)
+CheckCategory = Literal[
+    "competitor",
+    "pricing",
+    "market_size",
+    "demand_signal",
+    "recent_activity",
+    "failure_or_risk",
+    "irrelevant",
+]
+
 
 class IdeaProfile(BaseModel):
     """The idea, turned into a clean structure."""
@@ -41,11 +52,15 @@ class ClaimList(BaseModel):
 
 
 class ClaimCheck(BaseModel):
-    """The Critic's answer when checking one claim against one source."""
-    supported: bool = Field(description="True only if the source text clearly supports the claim")
+    """The Critic's verdict on one claim and its source text."""
+    supported: bool = Field(description="True only if the source text clearly states what the claim says")
     evidence_quote: str = Field(
-        description="Exact words copied from the source that support the claim, or an empty string"
+        description="One continuous passage copied exactly from the source text that supports the claim. Empty if not supported"
     )
+    best_category: CheckCategory = Field(
+        description="The category that fits the claim best, or irrelevant if it is not useful evidence for this idea"
+    )
+    reason: str = Field(description="One short sentence explaining the verdict")
 
 
 class NoteConflict(BaseModel):
@@ -57,3 +72,11 @@ class NoteConflict(BaseModel):
     note_quote: str = Field(
         description="Exact words copied from the past note that support the sentence. Empty if not relevant"
     )
+
+
+class GapStatement(BaseModel):
+    """The Critic's analysis of what verified competitors do not mention."""
+    has_gap: bool = Field(description="True if at least one feature of the idea is not mentioned by any competitor fact")
+    feature: str = Field(description="The founder's feature in 2 to 6 words. Empty if no gap")
+    statement: str = Field(description="One sentence starting with 'Among the competitors found,'. Empty if no gap")
+    based_on: List[int] = Field(description="Numbers of the competitor facts that were compared")
