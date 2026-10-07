@@ -8,6 +8,7 @@ TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  # optional, not needed with Pinecone embeddings
 
+# set MODEL_NAME in .env to switch models without editing code
 MODEL_NAME = os.getenv("MODEL_NAME", "openai/gpt-oss-120b")
 PINECONE_INDEX_NAME = "startup-validator"
 DB_PATH = "validator.db"
@@ -53,6 +54,14 @@ MAX_SOURCES_PER_CLAIM = 3
 MIN_EVIDENCE_FOR_VERDICT = 4   # fewer verified checklist items than this = "Unclear"
 CROWDED_MEDIUM = 3             # distinct competitors: 3 or more = medium
 CROWDED_HIGH = 7               # 7 or more = high
+
+# ---------- API (Phase 10) ----------
+APP_API_KEY = os.getenv("APP_API_KEY", "")                  # empty = no key needed (local use)
+MAX_RUNS_PER_DAY = int(os.getenv("MAX_RUNS_PER_DAY", "20"))
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:3000,http://localhost:5173,http://localhost:8501",
+).split(",")
 
 if not GROQ_API_KEY or not TAVILY_API_KEY:
     raise ValueError("Missing GROQ_API_KEY or TAVILY_API_KEY. Check your .env file.")
