@@ -11,10 +11,10 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  # optional, not needed with Pineco
 # set MODEL_NAME in .env to switch models without editing code
 MODEL_NAME = os.getenv("MODEL_NAME", "openai/gpt-oss-120b")
 PINECONE_INDEX_NAME = "startup-validator"
-DB_PATH = "validator.db"
+DB_PATH = os.getenv("DB_PATH", "validator.db")   # changed: reads the setting
 
 # ---------- Pinecone memory (Phase 3) ----------
-PINECONE_NAMESPACE = "founder"          # separates real memory from test data
+PINECONE_NAMESPACE = os.getenv("PINECONE_NAMESPACE", "founder")   # changed: reads the setting
 PINECONE_CLOUD = "aws"
 PINECONE_REGION = "us-east-1"           # the free plan supports this region
 EMBED_MODEL = "llama-text-embed-v2"
