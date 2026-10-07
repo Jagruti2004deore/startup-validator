@@ -1,12 +1,12 @@
-from app.scoring import count_competitors, matched_pricing
 import re
 from collections import Counter
 
 from app import db
 from app.config import MIN_VERIFIED, MAX_SOURCES_PER_CLAIM
-from app.llm_utils import ask_structured, get_llm
+from app.llm_utils import DailyLimitError, ask_structured, get_llm
 from app.models import ClaimCheck, GapStatement
 from app.prompts import CRITIC_PROMPT, GAP_PROMPT
+from app.scoring import count_competitors, matched_pricing
 from app.state import ValidatorState
 from app.utils import clean_text
 
@@ -33,6 +33,13 @@ NAME_STOP = {
     "september", "october", "november", "december",
 }
 GENERIC_WORDS = {"that", "with", "from", "their", "which", "this", "apps", "based", "using"}
+
+MARKET_WORD_RE = re.compile(r"\b(market|industry|sector|revenue|valuation|valued)\b", re.IGNORECASE)
+
+
+def looks_like_market_figure(text: str) -> bool:
+    """A market-size claim must talk about a market, an industry or revenue."""
+    return bool(MARKET_WORD_RE.search(text))
 
 
 def norm(text: str) -> str:
@@ -133,6 +140,7 @@ def compute_gaps(verified: list) -> list:
     counts["pricing"] = len(matched_pricing(verified))   # only prices of verified competitors
     return [angle for angle, need in MIN_VERIFIED.items() if counts.get(angle, 0) < need]
 
+
 # ---------------------------------------------------------------------------
 # Checking one claim
 # ---------------------------------------------------------------------------
@@ -187,6 +195,8 @@ def check_claim(claim: dict, sources: list, past_notes: list, profile: dict):
     )
     try:
         verdict = ask_structured(get_llm(), prompt, ClaimCheck)
+    except DailyLimitError:
+        raise  # stop the run: every later check would fail the same way
     except Exception as e:
         return _drop(c, f"check_failed: {str(e)[:80]}")  # tried again in the next round
 
@@ -203,6 +213,10 @@ def check_claim(claim: dict, sources: list, past_notes: list, profile: dict):
     if verdict.best_category != c["category"]:
         c["recategorized_from"] = c["category"]
         c["category"] = verdict.best_category
+
+    # Check 7: a market-size claim must actually talk about a market
+    if c["category"] == "market_size" and not looks_like_market_figure(c["text"]):
+        return _drop(c, "not_a_market_figure")
 
     c["evidence_quote"] = verdict.evidence_quote.strip()
     return c, None
@@ -222,6 +236,8 @@ def make_gap_claim(idea_text: str, profile: dict, verified: list):
     prompt = GAP_PROMPT.format(name=profile["name"], solution=profile["solution"], facts=facts)
     try:
         g = ask_structured(get_llm(), prompt, GapStatement)
+    except DailyLimitError:
+        raise
     except Exception as e:
         print(f"  (gap analysis failed: {e})")
         return None, None

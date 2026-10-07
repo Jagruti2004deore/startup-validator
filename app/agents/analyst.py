@@ -1,6 +1,6 @@
 from app import db
 from app.config import ANALYST_BATCH_SIZE, MAX_CLAIMS_PER_BATCH
-from app.llm_utils import ask_structured, get_llm
+from app.llm_utils import DailyLimitError, ask_structured, get_llm
 from app.models import ClaimList, NoteConflict
 from app.prompts import ANALYST_PROMPT, NOTE_CONFLICT_PROMPT
 from app.state import ValidatorState
@@ -44,6 +44,8 @@ def analyst_node(state: ValidatorState) -> dict:
         )
         try:
             result = ask_structured(get_llm(), prompt, ClaimList)
+        except DailyLimitError:
+            raise  # stop the run: every later call would fail the same way
         except Exception as e:
             # one failed batch must not kill the run
             print(f"  (analyst batch {start + 1}-{end} failed: {e})")
@@ -65,8 +67,8 @@ def analyst_node(state: ValidatorState) -> dict:
             found += 1
         db.add_event(run_id, "analyst", f"Read sources {start + 1}-{end}: {found} claim(s)")
 
-    # 2. Compare the idea with past notes (first round only)
-    if state["loop_count"] == 0 and state["past_notes"]:
+    # 2. Compare the idea with past notes (only when the sources are read for the first time)
+    if state["analyzed_count"] == 0 and state["past_notes"]:
         notes_text = "\n".join(f"- {n}" for n in state["past_notes"])
         prompt = NOTE_CONFLICT_PROMPT.format(
             name=p["name"], problem=p["problem"], solution=p["solution"], notes=notes_text,
@@ -82,6 +84,8 @@ def analyst_node(state: ValidatorState) -> dict:
                     "note_quote": link.note_quote.strip(),
                 })
                 db.add_event(run_id, "analyst", "Linked the idea to a past note")
+        except DailyLimitError:
+            raise
         except Exception as e:
             print(f"  (past-note check failed: {e})")
 

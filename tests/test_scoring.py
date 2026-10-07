@@ -104,3 +104,19 @@ def test_pricing_for_unknown_company_does_not_count():
 def test_matched_pricing_keeps_only_known_competitors():
     verified = comps(2) + [claim("pricing", "Alpha charges $5"), claim("pricing", "Zoom charges $9")]
     assert [c["text"] for c in matched_pricing(verified)] == ["Alpha charges $5"]
+
+
+def test_similar_names_do_not_share_prices():
+    verified = [
+        {"category": "competitor", "text": "Study Group connects students with a university"},
+        {"category": "pricing", "text": "YPT Study Group App offers a monthly subscription for $2.99"},
+    ]
+    assert matched_pricing(verified) == []
+
+
+def test_extended_product_name_still_matches():
+    verified = [
+        {"category": "competitor", "text": "Kahoot offers quiz games"},
+        {"category": "pricing", "text": "Kahoot Plus costs $5 a month"},
+    ]
+    assert len(matched_pricing(verified)) == 1

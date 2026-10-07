@@ -49,3 +49,9 @@ def recall_node(state: ValidatorState) -> dict:
     )
     db.add_event(state["run_id"], "recall", message)
     return {"past_notes": notes, "memory_checked": True}
+def repair_spacing(text: str) -> str:
+    """Fix common missing spaces in display text, for example '3.63Billion' or 'in2026'."""
+    text = re.sub(r"(\d)(billion|million|trillion|crore|lakh)\b", r"\1 \2", text, flags=re.I)
+    text = re.sub(r"\b(in|by|of|to|on|at|from|since|until|for|and)(\d)", r"\1 \2", text, flags=re.I)
+    text = re.sub(r",(?=[A-Za-z])", ", ", text)
+    return text

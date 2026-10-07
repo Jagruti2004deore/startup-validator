@@ -1,5 +1,6 @@
 from app.agents.critic import (
     numbers_missing, names_missing, quote_in_source, compute_gaps,
+    looks_like_market_figure,
 )
 
 SOURCE = (
@@ -73,6 +74,7 @@ def test_gaps_are_listed():
     ]
     assert "pricing" in compute_gaps(unmatched)
 
+
 def test_names_ignore_spacing_and_punctuation():
     assert names_missing("MoocLab lists Middle-High groups", "Mooclab: Middle/High school groups") == []
 
@@ -82,3 +84,11 @@ def test_quote_ignores_spacing_noise():
         "India edtech market size increased to USD 4.60 Billion in 2026",
         "The India edtech market size increased to USD 4.60Billion in2026",
     )
+
+
+def test_market_figure_needs_market_words():
+    assert looks_like_market_figure("India's EdTech market is projected to reach 30 billion by 2030")
+
+
+def test_population_statistics_are_not_market_figures():
+    assert not looks_like_market_figure("India aims to admit 86 million students by 2035")

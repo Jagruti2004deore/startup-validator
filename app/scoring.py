@@ -48,20 +48,29 @@ def count_competitors(verified: list) -> int:
     })
 
 
+def _same_company(a: list, b: list) -> bool:
+    """True if the shorter name's words start the longer one, so 'kahoot' matches 'kahoot study'."""
+    if not a or not b:
+        return False
+    n = min(len(a), len(b))
+    return a[:n] == b[:n]
+
+
 def matched_pricing(verified: list) -> list:
-    """Pricing claims that name a verified competitor. Other pricing claims do not count."""
-    keys = []
+    """Pricing claims whose company is a verified competitor. Other pricing claims do not count."""
+    competitor_names = []
     for c in verified:
         if c.get("category") == "competitor":
-            tokens = _tokens(competitor_key(c.get("text", "")))[:2]
+            tokens = _tokens(competitor_key(c.get("text", "")))
             if tokens:
-                keys.append(tokens)
+                competitor_names.append(tokens)
+
     result = []
     for c in verified:
         if c.get("category") != "pricing":
             continue
-        words = set(_tokens(c.get("text", "")))
-        if any(all(tok in words for tok in key) for key in keys):
+        tokens = _tokens(competitor_key(c.get("text", "")))
+        if any(_same_company(tokens, name) for name in competitor_names):
             result.append(c)
     return result
 

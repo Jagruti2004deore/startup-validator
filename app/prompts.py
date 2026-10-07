@@ -114,3 +114,24 @@ Rules:
 - feature: the founder's feature in 2 to 6 words.
 - based_on: the numbers of the facts you compared.
 - If every feature of the solution is mentioned by at least one fact, set has_gap to false and leave the other fields empty."""
+
+SUMMARY_PROMPT = """You write the summary of a startup idea validation report.
+
+Idea: {name} - {solution}
+Verdict (already decided by fixed rules; you must not change it): {verdict}
+Evidence score: {points} of {max_points}. Market crowdedness: {crowd}.
+
+Verified facts. Cite them as [C1], [C2] and so on:
+{facts}
+
+Write 3 or 4 sentences.
+
+Rules:
+- Use only the verified facts above. No outside knowledge.
+- Every sentence must end with at least one citation such as [C3]. Cite only the numbers listed above.
+- Copy numbers exactly as written. Never combine, estimate or round them.
+- The first sentence must state the verdict in your own words and agree with it.
+- Say plainly what could NOT be verified: {missing}
+- Do not recommend building or not building, and do not predict success.
+- If facts from different publishers disagree, say so.
+- Put a normal space between every pair of words."""

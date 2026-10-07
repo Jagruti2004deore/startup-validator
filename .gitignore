@@ -3,3 +3,6 @@ venv/
 __pycache__/
 *.db
 .pytest_cache/
+
+tests/sample_final.json
+tests/sample_report.md

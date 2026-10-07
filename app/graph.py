@@ -4,6 +4,7 @@ from app import db
 from app.agents.analyst import analyst_node
 from app.agents.critic import critic_node
 from app.agents.intake import intake_node, recall_node
+from app.agents.reporter import report_node
 from app.agents.researcher import plan_research, search_web
 from app.config import MAX_LOOPS, MAX_SOURCES_TOTAL, GAP_ROUND_MAX_QUERIES
 from app.scoring import score_node
@@ -57,6 +58,7 @@ def build_graph():
     builder.add_node("critic", safe("critic", critic_node))
     builder.add_node("prepare_retry", prepare_retry)
     builder.add_node("score", safe("scoring", score_node))
+    builder.add_node("report", safe("reporter", report_node))
     builder.add_node("finish", finish_node)
 
     builder.add_edge(START, "intake")
@@ -74,7 +76,8 @@ def build_graph():
     )
     builder.add_edge("prepare_retry", "plan_research")
 
-    builder.add_edge("score", "finish")
+    builder.add_edge("score", "report")
+    builder.add_edge("report", "finish")
     builder.add_edge("finish", END)
     return builder.compile()
 

@@ -8,7 +8,7 @@ TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  # optional, not needed with Pinecone embeddings
 
-MODEL_NAME = "openai/gpt-oss-120b"
+MODEL_NAME = os.getenv("MODEL_NAME", "openai/gpt-oss-120b")
 PINECONE_INDEX_NAME = "startup-validator"
 DB_PATH = "validator.db"
 

@@ -15,3 +15,11 @@ def clean_text(text: str) -> str:
     text = re.sub(r"[\u2010-\u2012\u2212]", "-", text)
     text = re.sub(r"(?<=\S)[ \t]{2,}(?=\S)", " ", text)
     return text
+
+
+def repair_spacing(text: str) -> str:
+    """Fix common missing spaces in display text, for example '3.63Billion' or 'in2026'."""
+    text = re.sub(r"(\d)(billion|million|trillion|crore|lakh)\b", r"\1 \2", text, flags=re.I)
+    text = re.sub(r"\b(in|by|of|to|on|at|from|since|until|for|and)(\d)", r"\1 \2", text, flags=re.I)
+    text = re.sub(r",(?=[A-Za-z])", ", ", text)
+    return text
