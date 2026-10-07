@@ -1,0 +1,37 @@
+[
+  {"id": "v01", "group": "crowded",
+   "idea": "A food delivery app that delivers restaurant meals to homes in big Indian cities.",
+   "acceptable": ["Risky", "Caution", "Unclear"], "must_not": ["Promising"]},
+
+  {"id": "v02", "group": "crowded",
+   "idea": "A ride-hailing app that connects passengers with taxi and auto-rickshaw drivers in Indian cities.",
+   "acceptable": ["Risky", "Caution", "Unclear"], "must_not": ["Promising"]},
+
+  {"id": "v03", "group": "crowded",
+   "idea": "A general online marketplace where anyone can buy and sell new and used products across India.",
+   "acceptable": ["Risky", "Caution", "Unclear"], "must_not": ["Promising"]},
+
+  {"id": "v04", "group": "niche",
+   "idea": "A study-buddy app that matches college students in India into small groups for exam preparation, with a shared study planner and weekly mock quizzes.",
+   "acceptable": ["Promising", "Caution"], "must_not": ["Risky"]},
+
+  {"id": "v05", "group": "niche",
+   "idea": "A tool that helps small restaurants in India predict daily demand and reduce food waste using their past sales data.",
+   "acceptable": ["Promising", "Caution"], "must_not": ["Risky"]},
+
+  {"id": "v06", "group": "niche",
+   "idea": "A booking platform that lets coworking spaces rent out empty meeting rooms by the hour to freelancers, with an approval workflow.",
+   "acceptable": ["Promising", "Caution"], "must_not": ["Risky"]},
+
+  {"id": "v07", "group": "obscure",
+   "idea": "An app for farmers.",
+   "acceptable": ["Unclear", "Caution"], "must_not": ["Promising", "Risky"]},
+
+  {"id": "v08", "group": "obscure",
+   "idea": "A marketplace for renting camping gear in rural Bhutan.",
+   "acceptable": ["Unclear", "Caution"], "must_not": ["Promising", "Risky"]},
+
+  {"id": "v09", "group": "obscure",
+   "idea": "A platform that makes life easier for everyone.",
+   "acceptable": ["Unclear", "Caution"], "must_not": ["Promising", "Risky"]}
+]

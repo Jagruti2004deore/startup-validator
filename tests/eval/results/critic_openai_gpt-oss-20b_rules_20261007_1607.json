@@ -1,0 +1,298 @@
+{
+  "model": "openai/gpt-oss-20b",
+  "mode": "rules only",
+  "summary": {
+    "scored": 9,
+    "correct": 9,
+    "bad_caught": [
+      8,
+      8
+    ],
+    "good_kept": [
+      1,
+      1
+    ],
+    "unsafe_passes": [],
+    "false_drops": [],
+    "by_layer": {
+      "code": [
+        9,
+        9
+      ],
+      "llm": [
+        0,
+        0
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "c01",
+      "kind": "supported competitor",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c02",
+      "kind": "supported pricing",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c03",
+      "kind": "supported market size",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c04",
+      "kind": "supported demand",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c05",
+      "kind": "supported recent activity",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c06",
+      "kind": "supported failure",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c07",
+      "kind": "supported claim, source has spacing noise",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c08",
+      "kind": "invented price",
+      "layer": "code",
+      "expected": "dropped",
+      "got": "dropped",
+      "reason": "number_not_in_source",
+      "expected_reasons": [
+        "number_not_in_source"
+      ]
+    },
+    {
+      "id": "c09",
+      "kind": "invented market figure",
+      "layer": "code",
+      "expected": "dropped",
+      "got": "dropped",
+      "reason": "number_not_in_source",
+      "expected_reasons": [
+        "number_not_in_source"
+      ]
+    },
+    {
+      "id": "c10",
+      "kind": "wrong company",
+      "layer": "code",
+      "expected": "dropped",
+      "got": "dropped",
+      "reason": "name_not_in_source",
+      "expected_reasons": [
+        "name_not_in_source"
+      ]
+    },
+    {
+      "id": "c11",
+      "kind": "famous company not in the source",
+      "layer": "code",
+      "expected": "dropped",
+      "got": "dropped",
+      "reason": "name_not_in_source",
+      "expected_reasons": [
+        "name_not_in_source"
+      ]
+    },
+    {
+      "id": "c12",
+      "kind": "cites a source that does not exist",
+      "layer": "code",
+      "expected": "dropped",
+      "got": "dropped",
+      "reason": "source_number_does_not_exist",
+      "expected_reasons": [
+        "source_number_does_not_exist"
+      ]
+    },
+    {
+      "id": "c13",
+      "kind": "cites no source",
+      "layer": "code",
+      "expected": "dropped",
+      "got": "dropped",
+      "reason": "no_source_cited",
+      "expected_reasons": [
+        "no_source_cited"
+      ]
+    },
+    {
+      "id": "c14",
+      "kind": "unsupported superlative",
+      "layer": "llm",
+      "expected": "dropped",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": [
+        "not_supported_by_source",
+        "quote_not_found_in_source"
+      ]
+    },
+    {
+      "id": "c15",
+      "kind": "invented details (names)",
+      "layer": "code",
+      "expected": "dropped",
+      "got": "dropped",
+      "reason": "name_not_in_source",
+      "expected_reasons": [
+        "name_not_in_source"
+      ]
+    },
+    {
+      "id": "c16",
+      "kind": "unsupported causal claim",
+      "layer": "llm",
+      "expected": "dropped",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": [
+        "not_supported_by_source",
+        "quote_not_found_in_source"
+      ]
+    },
+    {
+      "id": "c17",
+      "kind": "true but irrelevant: general statistic",
+      "layer": "llm",
+      "expected": "dropped",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": [
+        "not_relevant_to_idea"
+      ]
+    },
+    {
+      "id": "c18",
+      "kind": "true but irrelevant: other industry",
+      "layer": "llm",
+      "expected": "dropped",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": [
+        "not_relevant_to_idea"
+      ]
+    },
+    {
+      "id": "c19",
+      "kind": "true but irrelevant: general tool as competitor",
+      "layer": "llm",
+      "expected": "dropped",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": [
+        "not_relevant_to_idea"
+      ]
+    },
+    {
+      "id": "c20",
+      "kind": "whole-economy figure as market size",
+      "layer": "llm",
+      "expected": "dropped",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": [
+        "not_relevant_to_idea",
+        "not_a_market_figure"
+      ]
+    },
+    {
+      "id": "c21",
+      "kind": "population statistic as market size",
+      "layer": "llm",
+      "expected": "dropped",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": [
+        "not_relevant_to_idea",
+        "not_a_market_figure"
+      ]
+    },
+    {
+      "id": "c22",
+      "kind": "true claim with the wrong label",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c23",
+      "kind": "supported paraphrase",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c24",
+      "kind": "supported price, different wording",
+      "layer": "llm",
+      "expected": "verified",
+      "got": "skipped (needs LLM)",
+      "reason": "check_failed",
+      "expected_reasons": []
+    },
+    {
+      "id": "c25",
+      "kind": "past-note claim with a real quote",
+      "layer": "code",
+      "expected": "verified",
+      "got": "verified",
+      "reason": "",
+      "expected_reasons": []
+    },
+    {
+      "id": "c26",
+      "kind": "past-note claim with an invented quote",
+      "layer": "code",
+      "expected": "dropped",
+      "got": "dropped",
+      "reason": "note_quote_not_found",
+      "expected_reasons": [
+        "note_quote_not_found"
+      ]
+    }
+  ]
+}
