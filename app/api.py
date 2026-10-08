@@ -189,5 +189,9 @@ def create_note(body: NoteIn):
 def list_notes():
     return db.list_notes()
 
+@app.get("/", include_in_schema=False)
+def root():
+    return {"service": "Startup Idea Validator API", "docs": "/docs", "health": "/health"}
+
 
 app.include_router(router)
