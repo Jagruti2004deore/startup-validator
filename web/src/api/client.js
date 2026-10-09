@@ -40,6 +40,8 @@ async function request(method, path, body) {
 }
 
 export const api = {
+  /** Wakes a sleeping free-tier server. The answer is ignored. */
+  wake: () => fetch(`${BASE}/health`).catch(() => undefined),
   startValidation: (idea) => request("POST", "/validate", { idea }),
   getRun: (runId, after = 0) => request("GET", `/runs/${runId}?after=${after}`),
   listRuns: (limit = 50) => request("GET", `/runs?limit=${limit}`),
